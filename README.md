@@ -44,6 +44,8 @@ NixOS 配置示例（将路径改为自己的位置）：
 
 ## 运行方式与更新
 
+原生模组构建环境包含 C/C++ 编译器、binutils、`pkg-config`、Make、CMake、Ninja、C 标准库及 Linux 头文件，以及 ALSA、libudev、OpenSSL、zlib 开发文件。Rust/Cargo 继续由启动器下载并固定版本。请通过 `nix run path:.` 或 `result/bin/horizon-launcher` 启动，直接运行 `unwrapped` 二进制无法获得这些依赖。依赖依据上游 [原生模组构建说明](https://github.com/horizon-rust/horizon/blob/launcher%400.2.69/docs/native-mods.md)；特殊模组可能另需额外系统库。
+
 - 使用 `buildFHSEnv` 提供启动器及其下载的游戏、准备工具和服务器所需的 Linux 运行环境，包含 X11、Wayland、Vulkan、音频库及 Java/Python 工具。运行时需要允许非特权用户命名空间，NixOS 默认支持。
 - 通过 `HORIZON_LAUNCHER_NO_SELF_UPDATE=1` 禁用启动器自更新，避免尝试修改只读 Nix store。更新启动器使用下方 flake 命令，无需手动修改版本或 SHA-256。
 - 游戏由启动器另行下载到用户目录，不属于 Nix 构建闭包，也不由 `flake.lock` 固定。Minecraft 账号、游戏数据准备及图形驱动仍按上游要求配置。

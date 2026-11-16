@@ -40,6 +40,19 @@ buildFHSEnv {
   targetPkgs =
     p: with p; [
       stdenv.cc.cc.lib
+      # Native mods use the launcher's pinned Rust, but need a system C toolchain.
+      stdenv.cc
+      binutils
+      pkg-config
+      gnumake
+      cmake
+      ninja
+      glibc.dev
+      linuxHeaders
+      alsa-lib.dev
+      udev.dev
+      openssl.dev
+      zlib.dev
       zlib
       openssl
       curl
@@ -74,6 +87,8 @@ buildFHSEnv {
   runScript = "${launcher}/bin/horizon-launcher";
   profile = ''
     export HORIZON_LAUNCHER_NO_SELF_UPDATE=1
+    # Some development outputs (including zlib) put .pc files in share.
+    export PKG_CONFIG_PATH="/usr/share/pkgconfig:$PKG_CONFIG_PATH"
   '';
   extraInstallCommands = ''
     mkdir -p $out/share
